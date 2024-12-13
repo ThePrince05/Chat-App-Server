@@ -1,0 +1,8 @@
+services:
+  tcpservertest:
+    image: ${DOCKER_REGISTRY-}tcpservertest
+    build:
+      context: .
+      dockerfile: tcp server test/Dockerfile
+    ports:
+      - 7893:5000
