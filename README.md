@@ -5,7 +5,7 @@ This is the server-side component of a chat application, designed to run in a Do
 The Docker images are published on [DockerHub](https://hub.docker.com/repository/docker/jimmynostar/tcpservertest/general), allowing you to deploy the server on various computers or servers easily.
 
 ## Features
-Listens on port 5000 by default.
+Listens on port 5000 (Mapped to 7893) by default.
 Lightweight and easy to deploy with Docker Compose.
 
 ## Usage
@@ -21,7 +21,7 @@ services:
 
 
 ## Steps to Run:
-1. Save the example `docker-compose.yml` file in your project directory.
+1. Use the `docker-compose.yml` file to Spin up a container.
 2. Start the container
 ```
 docker-compose up -d
