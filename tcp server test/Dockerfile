@@ -11,19 +11,19 @@ EXPOSE 5000
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["tcp server test/tcp server test.csproj", "tcp server test/"]
-RUN dotnet restore "./tcp server test/tcp server test.csproj"
+COPY ["tcp server test/Server.csproj", "tcp server test/"]
+RUN dotnet restore "./tcp server test/Server.csproj"
 COPY . .
 WORKDIR "/src/tcp server test"
-RUN dotnet build "./tcp server test.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./tcp server test.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "tcp server test.dll"]
+ENTRYPOINT ["dotnet", "Server.dll"]
