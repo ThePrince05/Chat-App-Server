@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Runtime;
 using System.Text;
 using tcp_server_test.Net.IO;
 
@@ -11,6 +12,10 @@ namespace tcp_server_test
 
         static void Main(string[] args)
         {
+      
+
+            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+
             // Define the server's listening port
             int port = 5000;
 
