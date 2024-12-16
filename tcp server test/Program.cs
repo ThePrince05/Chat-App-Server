@@ -7,14 +7,15 @@ namespace tcp_server_test
 {
     internal class Program
     {
-        static List<Client>? _users;
+        static List<Client> _users = new List<Client>();
+
         static void Main(string[] args)
         {
             // Define the server's listening port
             int port = 5000;
 
             // Create a TCP listener to listen for incoming client connections
-            _users = [];
+           
             TcpListener listener = new TcpListener(IPAddress.Any, port);
         
             // Start the listener
@@ -88,17 +89,21 @@ namespace tcp_server_test
                 Console.WriteLine("Client disconnected.");
             }
         }
+        static readonly object _usersLock = new object();
         static void BroadcastConnection()
         {
-            foreach (var user in _users)
+            lock (_usersLock)
             {
-                foreach (var usr in _users)
+                foreach (var user in _users)
                 {
-                    var broadcastPacket = new PacketBuilder();
-                    broadcastPacket.WriteOpCode(1);
-                    broadcastPacket.WriteMessage(usr.Username);
-                    broadcastPacket.WriteMessage(usr.UID.ToString());
-                    user.ClientSocket.Client.Send(broadcastPacket.GetPacketBytes());
+                    foreach (var usr in _users)
+                    {
+                        var broadcastPacket = new PacketBuilder();
+                        broadcastPacket.WriteOpCode(1);
+                        broadcastPacket.WriteMessage(usr.Username);
+                        broadcastPacket.WriteMessage(usr.UID.ToString());
+                        user.ClientSocket.Client.Send(broadcastPacket.GetPacketBytes());
+                    }
                 }
             }
         }
